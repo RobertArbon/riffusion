@@ -11,7 +11,8 @@ import typing as T
 import numpy as np
 import torch
 from diffusers.models import AutoencoderKL, UNet2DConditionModel
-from diffusers.pipeline_utils import DiffusionPipeline
+# from diffusers.pipeline_utils import DiffusionPipeline
+from diffusers.pipelines import DiffusionPipeline
 from diffusers.pipelines.stable_diffusion.safety_checker import StableDiffusionSafetyChecker
 from diffusers.schedulers import DDIMScheduler, LMSDiscreteScheduler, PNDMScheduler
 from diffusers.utils import logging
@@ -22,6 +23,7 @@ from transformers import CLIPFeatureExtractor, CLIPTextModel, CLIPTokenizer
 from riffusion.datatypes import InferenceInput
 from riffusion.external.prompt_weighting import get_weighted_text_embeddings
 from riffusion.util import torch_util
+from riffusion.util.image_util import always_sfw
 
 logger = logging.get_logger(__name__)  # pylint: disable=invalid-name
 
@@ -95,7 +97,8 @@ class RiffusionPipeline(DiffusionPipeline):
             torch_dtype=dtype,
             # Disable the NSFW filter, causes incorrect false positives
             # TODO(hayk): Disable the "you have passed a non-standard module" warning from this.
-            safety_checker=lambda images, **kwargs: (images, False),
+            # safety_checker=lambda images, **kwargs: (images, [False]*images.shape[0]),
+            safety_checker=always_sfw,
             low_cpu_mem_usage=low_cpu_mem_usage,
             local_files_only=local_files_only,
             cache_dir=cache_dir,

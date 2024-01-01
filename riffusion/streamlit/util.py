@@ -15,6 +15,7 @@ from riffusion.audio_splitter import AudioSplitter
 from riffusion.riffusion_pipeline import RiffusionPipeline
 from riffusion.spectrogram_image_converter import SpectrogramImageConverter
 from riffusion.spectrogram_params import SpectrogramParams
+from riffusion.util.image_util import always_sfw
 
 # TODO(hayk): Add URL params
 
@@ -69,7 +70,7 @@ def load_stable_diffusion_pipeline(
         checkpoint,
         revision="main",
         torch_dtype=dtype,
-        safety_checker=lambda images, **kwargs: (images, False),
+        safety_checker=always_sfw, 
     ).to(device)
 
     pipeline.scheduler = get_scheduler(scheduler, config=pipeline.scheduler.config)
@@ -137,7 +138,7 @@ def load_stable_diffusion_img2img_pipeline(
         checkpoint,
         revision="main",
         torch_dtype=dtype,
-        safety_checker=lambda images, **kwargs: (images, False),
+        safety_checker=always_sfw,
     ).to(device)
 
     pipeline.scheduler = get_scheduler(scheduler, config=pipeline.scheduler.config)

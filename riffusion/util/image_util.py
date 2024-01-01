@@ -10,6 +10,12 @@ from PIL import Image
 from riffusion.spectrogram_params import SpectrogramParams
 
 
+
+def always_sfw(images, **kwargs):
+    return (images, [False]*images.shape[0])
+    
+
+
 def image_from_spectrogram(spectrogram: np.ndarray, power: float = 0.25) -> Image.Image:
     """
     Compute a spectrogram image from a spectrogram magnitude array.
